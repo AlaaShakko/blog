@@ -15,6 +15,21 @@ class Post extends Model
 
     protected $with =['category','author'];
 
+    //Post::newQuery()->filter()
+    public function scopeFilter($query ,array $filters){
+       $query->when($filters['search'] ?? false,function ($query,$search){
+           $query
+               ->where('title','like','%' . $search . '%')
+               ->orWhere('body','like','%' . $search . '%');
+
+       });
+/*        if($filters['search'] ?? false){
+            $query
+                ->where('title','like','%' . request('search') . '%')
+                ->orWhere('body','like','%' . request('search') . '%');
+        }*/
+    }
+
     public function category(){
         //relations ex:one2one,many2many,belong2,belong2many......
 
