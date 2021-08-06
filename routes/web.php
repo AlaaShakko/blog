@@ -16,22 +16,48 @@ use App\Models\Post;
 |
 */
 
-
 Route::get('/', function () {
-    $posts = Post::all();
-    return view('posts', [
-        'posts' => $posts,
-    ]);
+   // \Illuminate\Support\Facades\DB::listen(function ($query){
+    //Illuminate\Support\Facades\Log::info('');
+    // logger($query->sql,$query->bindings);});
+    //$posts = Post::all();
 
+    return view('posts', [
+        //latest('published_at') sort according to the post published date
+        //add 'author' to avoid n+1 since we have @foreach
+        'posts' => Post::latest()->get(),
+        'categories'=>\App\Models\Category::all()
+    ]);
 });
 
 
 
-Route::get('posts/{post}', function ($slug) {
+Route::get('posts/{post:slug}',function (Post $post)  {//function ($id)
+   // $post = Post::findOrFail($id);
     return view('post', [
-        'post' => Post::find($slug),
+        'post' => $post
     ]);
-})->where('post', '[A-z_\-]+');
+})->name('home');
+
+Route::get('categories/{category:slug}',function (\App\Models\Category $category){
+
+    return view('posts', [
+        'posts' => $category->posts,
+        'currentCategory'=>$category,
+        'categories'=>\App\Models\Category::all()
+    ]);
+    /*giving this rote a name ==category*/
+})->name('category');
+
+Route::get('authors/{author:username}',function (\App\Models\User $author){
+
+   // dd($author);
+    return view('posts', [
+        'posts' => $author->posts,
+        'categories'=>\App\Models\Category::all()
+    ]);
+});
+    //->where('post', '[A-z_\-]+');
 
     //$files = File::files(resource_path("posts"));
     //$posts = collect(File::files(resource_path("posts")))
