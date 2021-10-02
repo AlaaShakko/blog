@@ -1,12 +1,12 @@
-<!DOCTYPE html>
 <!-- extend from layout.blade to avoid duplications -->
+
 <x-layout>
     <section class="px-6 py-8">
-
         <main class="max-w-6xl mx-auto mt-10 lg:mt-20 space-y-6">
             <article class="max-w-4xl mx-auto lg:grid lg:grid-cols-12 gap-x-10">
                 <div class="col-span-4 lg:text-center lg:pt-14 mb-10">
-                    <img src="/images/illustration-1.png" alt="" class="rounded-xl">
+                    <img src= "{{ asset('storage/' . $post->thumbnail) }}" alt="" class="rounded-xl">
+                 {{--   <img src="/storage/ {{$post ->thumbnail}}" alt="" class="rounded-xl">--}}
 
                     <p class="mt-4 block text-gray-400 text-xs">
                         Published <time>{{$post->created_at->diffForHumans()}}</time>
@@ -15,10 +15,12 @@
                     <div class="flex items-center lg:justify-center text-sm mt-4">
                         <img src="/images/lary-avatar.svg" alt="Lary avatar">
                         <div class="ml-3 text-left">
-                            <h5 class="font-bold">{{$post->author->name}}</h5>
-
+                            <h5 class="font-bold">
+                                <a href="/?author={{ $post->author->username }}">{{ $post->author->name }}</a>
+                            </h5>
                         </div>
                     </div>
+
                 </div>
                 {{--Back to posts pages Section--}}
                 <div class="col-span-8">
@@ -36,11 +38,8 @@
                             </svg>
                             Back to Posts
                         </a>
-
-
                         <div class="space-x-2">
-
-                            <x-category-button :category="$post->category"/>
+                            <x-category-button :category="$post->category"></x-category-button>
                             {{--this will show the categoy button multiple times so we created category button component to avoid duplicts--}}
                           {{--  <a href="/categories/{{$post->category->slug}}"
                                class="px-3 py-1 border border-blue-300 rounded-full text-blue-300 text-xs uppercase font-semibold"
@@ -58,10 +57,25 @@
                         {!! $post->body !!}
                     </div>
                 </div>
+
+                {{--COMMENTS SECTION--}}
+                <section class="col-span-8 col-start-5 mt-10 space-y-6">
+
+                    @include('posts._add-comment-form')
+
+                    {{--comments--}}
+                    @foreach ($post->comments as $comment)
+                        <x-post-comment :comment="$comment"></x-post-comment>
+                    @endforeach
+                    {{--<x-post-comment></x-post-comment>
+                    <x-post-comment></x-post-comment>
+                    <x-post-comment></x-post-comment>
+                    <x-post-comment></x-post-comment>--}}
+                </section>
             </article>
         </main>
     </section>
-    </body>
+</x-layout>
 
 
     {{--  @section('content')
@@ -80,4 +94,4 @@
           <a href="/">Go back</a>
       @endsection
       --}}
-</x-layout>
+

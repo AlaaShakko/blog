@@ -4,7 +4,7 @@
     <div class="py-6 px-5">
         <div>
             {{--TODO--}}
-            <img src="/images/illustration-3.png" alt="Blog Post illustration" class="rounded-xl">
+            <img src= "{{ asset('storage/' . $post->thumbnail) }}" alt="Blog Post illustration" class="rounded-xl">
         </div>
 
         {{--Category Section--}}
@@ -45,8 +45,8 @@
                     <img src="/images/lary-avatar.svg" alt="Lary avatar">
                     {{--Author Section--}}
                     <div class="ml-3">
-                        <h5 class="font-bold">{{$post->author->name}}</h5>
-                        <h6>Mascot at Laracasts</h6>
+                        <h5 class="font-bold"><a href="/authors/{{$post->author->username}}">{{$post->author->name}}</a></h5>
+                        <h6>Author</h6>
                     </div>
                 </div>
 
